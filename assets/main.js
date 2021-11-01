@@ -14,7 +14,7 @@
         protocol: 'https'
 
     });
-    const rpc = new eosjs_jsonrpc.default(network.fullhost());
+    var rpc = new eosjs_jsonrpc.default(network.fullhost());
 
       ScatterJS.connect('xsov.app', {network}).then(connected => {
             if (!connected) return console.error('no scatter');
@@ -182,7 +182,8 @@ function changeNode() {
         protocol: 'https'
 
     });
-    const rpc = new eosjs_jsonrpc.default(network.fullhost());
+    rpc = new eosjs_jsonrpc.default(network.fullhost());
+    api = ScatterJS.eos(network, eosjs_api.default, {rpc});
 
     alert('You successfully changed the node to ' + nodeOption);
 
@@ -260,11 +261,12 @@ function mintXsov(){
                 var sovSendAmount0 = document.getElementById('sovSend').value;
                 sovSendAmount = format_eos_amount(sovSendAmount) + " SOV";
                 sovSendAmount0 = format_eos_amount(sovSendAmount0);
+                var sovSendAmountBurn = (sovSendAmount0 * 0.01).toFixed(4) + " SOV";
 
                 var sovXsovPrice = parseFloat(xsovSupply / sovSupply);
-                var sovXsovConversion = ((sovSendAmount0 * sovXsovPrice)*.99).toFixed(4);
+                var sovXsovConversion = ((sovSendAmount0 * sovXsovPrice)*0.99).toFixed(4);
          
-                if (confirm("Deposit " + sovSendAmount + " to receive " + sovXsovConversion + " XSOV (SOV transfer burn will be deducted seperately from your account balance)") == true) {
+                if (confirm("Deposit " + sovSendAmount + " to receive " + sovXsovConversion + " XSOV (SOV transfer burn of " + sovSendAmountBurn + " will be deducted seperately from your account balance)") == true) {
 
                 api.transact({
                     actions: [{
@@ -334,16 +336,11 @@ function burnXsov(){
                 table: 'accounts'
             }).then(function(value){
                 const sovSupply = parseFloat(value.rows[0].balance).toFixed(4);
-
                 var xsovSovPrice = (sovSupply / xsovSupply);
-
                 var xsovSovConversion = (xsovSendAmount0 * xsovSovPrice).toFixed(4);
-                
+                var sovXtransferBurn = (xsovSovConversion * 0.01).toFixed(4) + " SOV";
 
-
-
-
-                if (confirm("Destroy " + xsovSendAmount + " to withdraw " + xsovSovConversion + " SOV (SOV transfer burn will be deducted seperately from the transfer)") == true) {
+                if (confirm("Destroy " + xsovSendAmount + " to withdraw " + xsovSovConversion + " SOV (SOV transfer burn of " + sovXtransferBurn + " will be deducted seperately from the transfer)") == true) {
 
                 api.transact({
                     actions: [{
