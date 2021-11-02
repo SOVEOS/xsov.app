@@ -47,6 +47,21 @@
 
 
 
+         rpc.get_table_rows({
+                json: true,
+                code: 'sovdexrelays',
+                scope: 'EOS',
+                table: 'pair'
+            }).then(function(value){
+                const soveosPrice = value.rows[0].price;
+
+         rpc.get_table_rows({
+                json: true,
+                code: 'sovdexrelays',
+                scope: 'USDT',
+                table: 'pair'
+            }).then(function(value){
+                const sovusdtPrice = value.rows[0].price;
 
          rpc.get_table_rows({
                 json: true,
@@ -102,10 +117,22 @@
 
                 var xsovUserValueStat = (xsovBalance0 * xsovSovPrice).toFixed(4);
 
-                xsovBalanceValueStat.innerText = ('Your balance = ' + xsovBalance);
-                xsovValueStat.innerText = (xsovBalance + ' = ' + xsovUserValueStat + ' SOV');
+                var xsoveosValue = (xsovUserValueStat * soveosPrice).toFixed(4);
 
-                xsovTvl.innerText = ("TVL = " + sovSupply + " SOV");
+                var xsovusdtValue = (xsovUserValueStat * sovusdtPrice).toFixed(4);
+
+                var eosTvl = (sovSupply * soveosPrice).toFixed(4);
+
+                var usdtTvl = (sovSupply * sovusdtPrice).toFixed(4);
+
+                xsovBalanceValueStat.innerText = (xsovBalance);
+                xsovValueStat.innerText = (xsovUserValueStat + ' SOV');
+                xsoveosValueStat.innerText = (xsoveosValue + ' EOS');
+                xsovusdtValueStat.innerText = (xsovusdtValue + ' USDT');
+
+                sovTvlstat.innerText = (sovSupply + " SOV");
+                eosTvlstat.innerText = (eosTvl + " EOS");
+                usdtTvlstat.innerText = (usdtTvl + " USDT");
 
                 document.getElementById("sovSend").placeholder = "Max = " + sovMaxSend + " SOV";
                 document.getElementById("myRange").max = sovMaxSend;
@@ -151,6 +178,10 @@
                 
             });
 
+
+            });
+
+            });
 
             });
 
