@@ -30,7 +30,7 @@
 
 
 
-      document.getElementById('doinit').style.visibility = "hidden";
+      document.getElementById('doinit').style.visibility = "visible";
 
      // Perpetually update that status id
         const setStatus = () => {
